@@ -28,7 +28,11 @@ App::App()
         mQuit = true;
     }
 
+    mAssets = Assets::Instance();
+
     mTimer = Timer::Instance();
+
+    mTex = new Texture("concept.png");
 }
 
 App::~App()
@@ -36,8 +40,14 @@ App::~App()
     Graphics::Release();
     mGraphics = NULL;
 
+    Assets::Release();
+    mAssets = NULL;
+
     Timer::Release();
     mTimer = NULL;
+
+    delete mTex;
+    mTex = NULL;
 }
 
 void App::Run()
@@ -56,7 +66,9 @@ void App::Run()
 
         if (mTimer->DeltaTime() >= 1.0f / FRAME_RATE)
         {
-            printf("dt: %F\n", mTimer->DeltaTime());
+            mGraphics->ClearBackBuffer();
+
+            mTex->Render();
 
             mGraphics->Render();
 
