@@ -8,8 +8,8 @@
 class Graphics
 {
 public:
-    static const int SCREEN_WIDTH = 640;
-    static const int SCREEN_HEIGHT = 256;
+    static const int SCREEN_WIDTH = 800;
+    static const int SCREEN_HEIGHT = 600;
 
 private:
     static Graphics* sInstance;
@@ -29,7 +29,7 @@ public:
 
     void ClearBackBuffer();
 
-    void DrawTexture(SDL_Texture* tex);
+    void DrawTexture(SDL_Texture* tex, SDL_Rect* clip = NULL, SDL_Rect* rend = NULL);
 
     void Render();
 

@@ -2,6 +2,7 @@
 
 #include "Timer.h"
 #include "Texture.h"
+#include "Input.h"
 
 class App
 {
@@ -13,6 +14,7 @@ private:
     bool mQuit;
     Graphics* mGraphics;
     Assets* mAssets;
+    Input* mInput;
     Timer* mTimer;
 
     SDL_Event mEvents;

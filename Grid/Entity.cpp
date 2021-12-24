@@ -23,7 +23,7 @@ void Entity::Pos(Vector2 pos)
 
 Vector2 Entity::Pos(SPACE space)
 {
-    if (space == local 
+    if (space == local
         || mParent == NULL)
     {
         return mPos;
@@ -77,6 +77,11 @@ void Entity::Parent(Entity* parent)
 Entity* Entity::Parent()
 {
     return mParent;
+}
+
+void Entity::Translate(Vector2 offset)
+{
+    mPos += offset;
 }
 
 void Entity::Update()

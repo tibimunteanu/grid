@@ -33,6 +33,30 @@ struct Vector2
 
         return Vector2(x / mag, y / mag);
     }
+
+    Vector2& operator +=(const Vector2& offset)
+    {
+        x += offset.x;
+        y += offset.y;
+
+        return *this;
+    }
+
+    Vector2& operator -=(const Vector2& offset)
+    {
+        x -= offset.x;
+        y -= offset.y;
+
+        return *this;
+    }
+
+    Vector2& operator *=(float scalar)
+    {
+        x *= scalar;
+        y *= scalar;
+
+        return *this;
+    }
 };
 
 inline Vector2 operator +(const Vector2& lhs, const Vector2& rhs)
@@ -43,6 +67,11 @@ inline Vector2 operator +(const Vector2& lhs, const Vector2& rhs)
 inline Vector2 operator -(const Vector2& lhs, const Vector2& rhs)
 {
     return Vector2(lhs.x - rhs.x, lhs.y - rhs.y);
+}
+
+inline Vector2 operator *(const Vector2& lhs, float scalar)
+{
+    return Vector2(lhs.x * scalar, lhs.y * scalar);
 }
 
 inline Vector2 Rotate(Vector2& vec, float angle)

@@ -30,9 +30,12 @@ App::App()
 
     mAssets = Assets::Instance();
 
+    mInput = Input::Instance();
+
     mTimer = Timer::Instance();
 
-    mTex = new Texture("concept.png");
+    mTex = new Texture("concept.png", 382, 164, 138, 58);
+    mTex->Pos(Vector2(100.0f, 200.0f));
 }
 
 App::~App()
@@ -42,6 +45,9 @@ App::~App()
 
     Assets::Release();
     mAssets = NULL;
+
+    Input::Release();
+    mInput = NULL;
 
     Timer::Release();
     mTimer = NULL;
@@ -66,6 +72,8 @@ void App::Run()
 
         if (mTimer->DeltaTime() >= 1.0f / FRAME_RATE)
         {
+            mInput->Update();
+
             mGraphics->ClearBackBuffer();
 
             mTex->Render();

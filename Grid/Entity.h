@@ -30,6 +30,8 @@ public:
     void Parent(Entity* parent);
     Entity* Parent();
 
+    void Translate(Vector2 offset);
+
     virtual void Update();
     virtual void Render();
 };

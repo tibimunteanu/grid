@@ -150,6 +150,7 @@
     <ClInclude Include="Assets.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
@@ -159,8 +160,8 @@
     <ClCompile Include="Assets.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Graphichs.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Math.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
