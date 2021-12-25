@@ -3,6 +3,7 @@
 Graphics* Graphics::sInstance = NULL;
 bool Graphics::sInitialized = false;
 
+
 Graphics* Graphics::Instance()
 {
     if (sInstance == NULL)
@@ -12,37 +13,6 @@ Graphics* Graphics::Instance()
     return sInstance;
 }
 
-void Graphics::Release()
-{
-    delete sInstance;
-    sInstance = NULL;
-
-    sInitialized = false;
-}
-
-bool Graphics::Initialized()
-{
-    return sInitialized;
-}
-
-Graphics::Graphics()
-{
-    mBackBuffer = NULL;
-
-    sInitialized = Init();
-}
-
-Graphics::~Graphics()
-{
-    SDL_DestroyWindow(mWindow);
-    mWindow = NULL;
-
-    SDL_DestroyRenderer(mRenderer);
-    mRenderer = NULL;
-
-    IMG_Quit();
-    SDL_Quit();
-}
 
 bool Graphics::Init()
 {
@@ -81,9 +51,53 @@ bool Graphics::Init()
         return false;
     }
 
+    // init ttf
+    if (TTF_Init() == -1)
+    {
+        printf("TTF Initialization Error: %s\n", TTF_GetError());
+        return false;
+    }
+
     mBackBuffer = SDL_GetWindowSurface(mWindow);
+
     return true;
 }
+
+void Graphics::Release()
+{
+    delete sInstance;
+    sInstance = NULL;
+
+    sInitialized = false;
+}
+
+bool Graphics::Initialized()
+{
+    return sInitialized;
+}
+
+
+Graphics::Graphics()
+{
+    mBackBuffer = NULL;
+
+    sInitialized = Init();
+}
+
+Graphics::~Graphics()
+{
+    SDL_DestroyWindow(mWindow);
+    mWindow = NULL;
+
+    SDL_DestroyRenderer(mRenderer);
+    mRenderer = NULL;
+
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
+}
+
+
 
 SDL_Texture* Graphics::LoadTexture(std::string path)
 {
@@ -107,6 +121,30 @@ SDL_Texture* Graphics::LoadTexture(std::string path)
 
     return tex;
 }
+
+SDL_Texture* Graphics::CreateTextTexture(TTF_Font* font, std::string text)
+{
+    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), { 0, 0, 0 });
+
+    if (surface == NULL)
+    {
+        printf("Text Render Error: %s\n", TTF_GetError());
+        return NULL;
+    }
+
+    SDL_Texture* tex = SDL_CreateTextureFromSurface(mRenderer, surface);
+
+    if (tex == NULL)
+    {
+        printf("Text Texture Createion Error: %s\n", SDL_GetError());
+        return NULL;
+    }
+
+    SDL_FreeSurface(surface);
+
+    return tex;
+}
+
 
 void Graphics::ClearBackBuffer()
 {

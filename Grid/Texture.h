@@ -5,7 +5,7 @@
 
 class Texture : public Entity
 {
-private:
+protected:
     SDL_Texture* mTex;
 
     Graphics* mGraphics;
@@ -20,6 +20,7 @@ private:
 public:
     Texture(std::string filename);
     Texture(std::string filename, int x, int y, int w, int h);
+    Texture(std::string text, std::string fontpath, int size);
     ~Texture();
 
     virtual void Render();

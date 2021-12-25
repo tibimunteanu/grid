@@ -34,17 +34,17 @@ App::App()
 
     mTimer = Timer::Instance();
 
-    mTex = new Texture("concept.png", 382, 164, 138, 58);
-    mTex->Pos(Vector2(100.0f, 200.0f));
+    mTex = new Texture("Hello World!", "UbuntuMono-Regular.ttf", 72);
+    mTex->Pos(Vector2(400.0f, 200.0f));
 }
 
 App::~App()
 {
-    Graphics::Release();
-    mGraphics = NULL;
-
     Assets::Release();
     mAssets = NULL;
+
+    Graphics::Release();
+    mGraphics = NULL;
 
     Input::Release();
     mInput = NULL;
@@ -73,11 +73,10 @@ void App::Run()
         if (mTimer->DeltaTime() >= 1.0f / FRAME_RATE)
         {
             mInput->Update();
+            mTex->Update();
 
             mGraphics->ClearBackBuffer();
-
             mTex->Render();
-
             mGraphics->Render();
 
             mTimer->Reset();

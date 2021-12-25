@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Timer.h"
-#include "Texture.h"
+#include "AnimatedTexture.h"
 #include "Input.h"
 
 class App
