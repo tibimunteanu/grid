@@ -122,9 +122,9 @@ SDL_Texture* Graphics::LoadTexture(std::string path)
     return tex;
 }
 
-SDL_Texture* Graphics::CreateTextTexture(TTF_Font* font, std::string text)
+SDL_Texture* Graphics::CreateTextTexture(TTF_Font* font, std::string text, SDL_Color color)
 {
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), { 0, 0, 0 });
+    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
 
     if (surface == NULL)
     {

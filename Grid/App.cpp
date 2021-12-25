@@ -2,6 +2,7 @@
 
 App* App::sInstance = NULL;
 
+
 App* App::Instance()
 {
     if (sInstance == NULL)
@@ -11,11 +12,13 @@ App* App::Instance()
     return sInstance;
 }
 
+
 void App::Release()
 {
     delete sInstance;
     sInstance = NULL;
 }
+
 
 App::App()
 {
@@ -34,7 +37,7 @@ App::App()
 
     mTimer = Timer::Instance();
 
-    mTex = new Texture("Hello World!", "UbuntuMono-Regular.ttf", 72);
+    mTex = new Texture("Hello World!", "UbuntuMono-Regular.ttf", 72, { 255, 0, 0 });
     mTex->Pos(Vector2(400.0f, 200.0f));
 }
 
@@ -55,6 +58,7 @@ App::~App()
     delete mTex;
     mTex = NULL;
 }
+
 
 void App::Run()
 {

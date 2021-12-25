@@ -2,6 +2,7 @@
 
 Input* Input::sInstance = NULL;
 
+
 Input* Input::Instance()
 {
     if (sInstance == NULL)
@@ -11,11 +12,13 @@ Input* Input::Instance()
     return sInstance;
 }
 
+
 void Input::Release()
 {
     delete sInstance;
     sInstance = NULL;
 }
+
 
 Input::Input()
 {
@@ -24,6 +27,7 @@ Input::Input()
 Input::~Input()
 {
 }
+
 
 bool Input::KeyDown(SDL_Scancode scanCode)
 {

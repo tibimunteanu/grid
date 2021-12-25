@@ -90,15 +90,15 @@ TTF_Font* Assets::GetFont(const std::string& filename, int size)
     return mFonts[key];
 }
 
-SDL_Texture* Assets::GetText(const std::string& text, const std::string& filename, int size)
+SDL_Texture* Assets::GetText(const std::string& text, const std::string& filename, int size, SDL_Color color)
 {
-    std::string key = text + filename + (char)size;
+    std::string key = text + filename + (char)size + (char)color.r + (char)color.g + (char)color.b;
 
     if (mText[key] == nullptr)
     {
         TTF_Font* font = GetFont(filename, size);
 
-        mText[key] = Graphics::Instance()->CreateTextTexture(font, text);
+        mText[key] = Graphics::Instance()->CreateTextTexture(font, text, color);
     }
 
     return mText[key];
