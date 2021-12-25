@@ -10,6 +10,7 @@ public:
 private:
     Vector2 mPos;
     float mRotation;
+    Vector2 mScale;
 
     bool mActive;
     Entity* mParent;
@@ -24,6 +25,9 @@ public:
     void Rotation(float rotation);
     float Rotation(SPACE space = world);
 
+    void Scale(Vector2 scale);
+    Vector2 Scale(SPACE space = world);
+
     void Active(bool active);
     bool Active();
 
@@ -31,6 +35,7 @@ public:
     Entity* Parent();
 
     void Translate(Vector2 offset);
+    void Rotate(float amount);
 
     virtual void Update();
     virtual void Render();

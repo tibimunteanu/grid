@@ -22,6 +22,7 @@ private:
     SDL_Event mEvents;
 
     Texture* mTex;
+    Texture* mTex2;
 public:
     static App* Instance();
     static void Release();

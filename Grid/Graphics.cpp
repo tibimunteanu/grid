@@ -151,9 +151,10 @@ void Graphics::ClearBackBuffer()
     SDL_RenderClear(mRenderer);
 }
 
-void Graphics::DrawTexture(SDL_Texture* tex, SDL_Rect* clip, SDL_Rect* rend)
+void Graphics::DrawTexture(SDL_Texture* tex, SDL_Rect* clip, SDL_Rect* rend,
+                           float angle, SDL_RendererFlip flip)
 {
-    SDL_RenderCopy(mRenderer, tex, clip, rend);
+    SDL_RenderCopyEx(mRenderer, tex, clip, rend, angle, NULL, flip);
 }
 
 void Graphics::Render()

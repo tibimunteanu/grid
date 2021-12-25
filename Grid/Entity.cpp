@@ -6,15 +6,18 @@ Entity::Entity(float x, float y)
     mPos.y = y;
 
     mRotation = 0.0f;
-    mActive = true;
+
+    mScale = VEC2_ONE;
 
     mParent = NULL;
+    mActive = true;
 }
 
 Entity::~Entity()
 {
     mParent = NULL;
 }
+
 
 void Entity::Pos(Vector2 pos)
 {
@@ -29,8 +32,13 @@ Vector2 Entity::Pos(SPACE space)
         return mPos;
     }
 
-    return mParent->Pos(world) + Rotate(mPos, mParent->Rotation(local));
+    Vector2 parentPos = mParent->Pos(world);
+    Vector2 parentScale = mParent->Scale(world);
+    Vector2 rotPos = RotateVector(mPos, mParent->Rotation(local));
+
+    return parentPos + rotPos * parentScale;
 }
+
 
 void Entity::Rotation(float r)
 {
@@ -57,6 +65,24 @@ float Entity::Rotation(SPACE space)
     return mParent->Rotation(world) + mRotation;
 }
 
+
+void Entity::Scale(Vector2 scale)
+{
+    mScale = scale;
+}
+
+Vector2 Entity::Scale(SPACE space)
+{
+    if (space == local
+        || mParent == NULL)
+    {
+        return mScale;
+    }
+
+    return mParent->Scale(world) * mScale;
+}
+
+
 void Entity::Active(bool active)
 {
     mActive = active;
@@ -66,6 +92,7 @@ bool Entity::Active()
 {
     return mActive;
 }
+
 
 void Entity::Parent(Entity* parent)
 {
@@ -79,10 +106,17 @@ Entity* Entity::Parent()
     return mParent;
 }
 
+
 void Entity::Translate(Vector2 offset)
 {
     mPos += offset;
 }
+
+void Entity::Rotate(float amount)
+{
+    mRotation += amount;
+}
+
 
 void Entity::Update()
 {
