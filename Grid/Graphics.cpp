@@ -1,35 +1,54 @@
 #include "Graphics.h"
 
+// static
 Graphics* Graphics::sInstance = NULL;
 bool Graphics::sInitialized = false;
-
 
 Graphics* Graphics::Instance()
 {
     if (sInstance == NULL)
     {
         sInstance = new Graphics();
+        if (!sInitialized)
+        {
+            Release();
+        }
     }
     return sInstance;
 }
 
-
-bool Graphics::Init()
+void Graphics::Release()
 {
+    if (sInstance)
+    {
+        delete sInstance;
+        sInstance = NULL;
+    }
+
+    sInitialized = false;
+}
+
+
+// private
+Graphics::Graphics()
+{
+    mWindow = NULL;
+    mRenderer = NULL;
+
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
     {
         printf("SDL Initialization Error: %s\n", SDL_GetError());
-        return false;
+        return;
     }
 
-    mWindow = SDL_CreateWindow("Grid",
+    mWindow = SDL_CreateWindow(TITLE,
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
     if (mWindow == NULL)
     {
         printf("Window Creation Error: %s\n", SDL_GetError());
-        return false;
+        return;
     }
 
     // init renderer
@@ -38,7 +57,7 @@ bool Graphics::Init()
     if (mRenderer == NULL)
     {
         printf("Renderer Creation Error: %s\n", SDL_GetError());
-        return false;
+        return;
     }
 
     SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -48,49 +67,32 @@ bool Graphics::Init()
     if (!(IMG_Init(flags) & flags))
     {
         printf("IMG Initialization Error: %s\n", IMG_GetError());
-        return false;
+        return;
     }
 
     // init ttf
     if (TTF_Init() == -1)
     {
         printf("TTF Initialization Error: %s\n", TTF_GetError());
-        return false;
+        return;
     }
 
-    mBackBuffer = SDL_GetWindowSurface(mWindow);
-
-    return true;
-}
-
-void Graphics::Release()
-{
-    delete sInstance;
-    sInstance = NULL;
-
-    sInitialized = false;
-}
-
-bool Graphics::Initialized()
-{
-    return sInitialized;
-}
-
-
-Graphics::Graphics()
-{
-    mBackBuffer = NULL;
-
-    sInitialized = Init();
+    sInitialized = true;
 }
 
 Graphics::~Graphics()
 {
-    SDL_DestroyWindow(mWindow);
-    mWindow = NULL;
+    if (mWindow)
+    {
+        SDL_DestroyWindow(mWindow);
+        mWindow = NULL;
+    }
 
-    SDL_DestroyRenderer(mRenderer);
-    mRenderer = NULL;
+    if (mRenderer)
+    {
+        SDL_DestroyRenderer(mRenderer);
+        mRenderer = NULL;
+    }
 
     TTF_Quit();
     IMG_Quit();
@@ -98,7 +100,7 @@ Graphics::~Graphics()
 }
 
 
-
+// public API
 SDL_Texture* Graphics::LoadTexture(std::string path)
 {
     SDL_Surface* surface = IMG_Load(path.c_str());

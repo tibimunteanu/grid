@@ -1,9 +1,8 @@
 #include "Texture.h"
 
+// public API
 Texture::Texture(std::string filename)
 {
-    mGraphics = Graphics::Instance();
-
     mTex = Assets::Instance()->GetTexture(filename);
 
     SDL_QueryTexture(mTex, NULL, NULL, &mWidth, &mHeight);
@@ -16,8 +15,6 @@ Texture::Texture(std::string filename)
 
 Texture::Texture(std::string filename, int x, int y, int w, int h)
 {
-    mGraphics = Graphics::Instance();
-
     mTex = Assets::Instance()->GetTexture(filename);
 
     mClipped = true;
@@ -30,14 +27,12 @@ Texture::Texture(std::string filename, int x, int y, int w, int h)
 
     mClipRect.x = x;
     mClipRect.y = y;
-    mClipRect.w = mWidth;
-    mClipRect.h = mHeight;
+    mClipRect.w = w;
+    mClipRect.h = h;
 }
 
 Texture::Texture(std::string text, std::string fontpath, int size, SDL_Color color)
 {
-    mGraphics = Graphics::Instance();
-
     mTex = Assets::Instance()->GetText(text, fontpath, size, color);
 
     SDL_QueryTexture(mTex, NULL, NULL, &mWidth, &mHeight);
@@ -51,7 +46,6 @@ Texture::Texture(std::string text, std::string fontpath, int size, SDL_Color col
 Texture::~Texture()
 {
     mTex = NULL;
-    mGraphics = NULL;
 }
 
 
@@ -66,5 +60,5 @@ void Texture::Render()
     mRenderRect.w = (int)(mWidth * scale.x);
     mRenderRect.h = (int)(mHeight * scale.y);
 
-    mGraphics->DrawTexture(mTex, mClipped ? &mClipRect : NULL, &mRenderRect, rot);
+    Graphics::Instance()->DrawTexture(mTex, mClipped ? &mClipRect : NULL, &mRenderRect, rot);
 }

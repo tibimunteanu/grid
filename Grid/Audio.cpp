@@ -1,41 +1,56 @@
 #include "Audio.h"
 
+// static
 Audio* Audio::sInstance = NULL;
+bool Audio::sInitialized = false;
 
 Audio* Audio::Instance()
 {
     if (sInstance == NULL)
     {
         sInstance = new Audio();
+        if (!sInitialized)
+        {
+            Release();
+        }
     }
     return sInstance;
 }
 
 void Audio::Release()
 {
-    delete sInstance;
-    sInstance = NULL;
+    if (sInstance)
+    {
+        delete sInstance;
+        sInstance = NULL;
+    }
+
+    sInitialized = false;
 }
 
+
+// private
 Audio::Audio()
 {
-    mAssets = Assets::Instance();
-
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0)
     {
         printf("Mixer Initialization Error: %s\n", Mix_GetError());
+        return;
     }
+
+    sInitialized = true;
 }
 
 Audio::~Audio()
 {
-    mAssets = NULL;
     Mix_Quit();
 }
 
+
+// public API
 void Audio::PlayMusic(const std::string& filename, int loops)
 {
-    Mix_PlayMusic(mAssets->GetMusic(filename), loops);
+    Mix_PlayMusic(Assets::Instance()->GetMusic(filename), loops);
 }
 
 void Audio::PauseMusic()
@@ -56,5 +71,5 @@ void Audio::ResumeMusic()
 
 void Audio::PlaySfx(const std::string& filename, int loops, int channel)
 {
-    Mix_PlayChannel(channel, mAssets->GetSfx(filename), loops);
+    Mix_PlayChannel(channel, Assets::Instance()->GetSfx(filename), loops);
 }

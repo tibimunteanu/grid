@@ -7,6 +7,7 @@ class Entity
 public:
     enum SPACE {local = 0, world = 1};
 
+
 private:
     Vector2 mPos;
     float mRotation;
@@ -16,7 +17,7 @@ private:
     Entity* mParent;
 
 public:
-    Entity(float x = 0.0f, float y = 0.0f);
+    Entity(Vector2 pos = VEC2_ZERO);
     ~Entity();
 
     void Pos(Vector2 pos);

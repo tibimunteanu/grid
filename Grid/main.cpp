@@ -4,7 +4,10 @@ int main(int argc, char* argv[])
 {
     App* app = App::Instance();
 
-    app->Run();
+    if (app)
+    {
+        app->Run();
+    }
 
     App::Release();
     app = NULL;

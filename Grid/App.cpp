@@ -1,56 +1,83 @@
 #include "App.h"
 
+// static
 App* App::sInstance = NULL;
-
+bool App::sInitialized = false;
 
 App* App::Instance()
 {
     if (sInstance == NULL)
     {
         sInstance = new App();
+        if (!sInitialized)
+        {
+            Release();
+        }
     }
     return sInstance;
 }
 
-
 void App::Release()
 {
-    delete sInstance;
-    sInstance = NULL;
+    if (sInstance)
+    {
+        delete sInstance;
+        sInstance = NULL;
+    }
+
+    sInitialized = false;
 }
 
 
+// private
 App::App()
 {
     mQuit = false;
+    mGraphics = NULL;
+    mAssets = NULL;
+    mInput = NULL;
+    mAudio = NULL;
+    mTimer = NULL;
+    mEvents = {};
 
     mGraphics = Graphics::Instance();
-
-    if (!Graphics::Initialized())
+    if (!mGraphics)
     {
-        mQuit = true;
+        return;
     }
 
     mAssets = Assets::Instance();
+    if (!mAssets)
+    {
+        return;
+    }
 
     mInput = Input::Instance();
+    if (!mInput)
+    {
+        return;
+    }
 
     mAudio = Audio::Instance();
+    if (!mAudio)
+    {
+        return;
+    }
 
     mTimer = Timer::Instance();
+    if (!mTimer)
+    {
+        return;
+    }
 
-    mTex = new Texture("Hello World!", "UbuntuMono-Regular.ttf", 72, { 255, 0, 0 });
-    mTex->Pos(Vector2(400.0f, 200.0f));
-    mTex->Scale(Vector2(0.4f, 0.4f));
-
-    mTex2 = new Texture("Grid!", "UbuntuMono-Bold.ttf", 72, { 0, 255, 0 });
-    mTex2->Pos(Vector2(300.0f, 300.0f));
-    mTex2->Scale(Vector2(4.0f, 4.0f));
-    mTex2->Parent(mTex);
+    sInitialized = true;
 }
 
 App::~App()
 {
+    Audio::Release();
+    mAudio = NULL;
+
     Assets::Release();
     mAssets = NULL;
 
@@ -60,20 +87,42 @@ App::~App()
     Input::Release();
     mInput = NULL;
 
-    Audio::Release();
-    mAudio = NULL;
-
     Timer::Release();
     mTimer = NULL;
-
-    delete mTex;
-    mTex = NULL;
-
-    delete mTex2;
-    mTex2 = NULL;
 }
 
 
+void App::EarlyUpdate()
+{
+    mTimer->Reset();
+    mInput->Update();
+
+    //add early updating here
+}
+
+void App::Update()
+{
+    // add updating here
+}
+
+void App::LateUpdate()
+{
+    //add late updating here
+
+    mInput->UpdatePrevInput();
+}
+
+void App::Render()
+{
+    mGraphics->ClearBackBuffer();
+
+    // add rendering here
+
+    mGraphics->Render();
+}
+
+
+// public API
 void App::Run()
 {
     while (!mQuit)
@@ -90,17 +139,11 @@ void App::Run()
 
         if (mTimer->DeltaTime() >= 1.0f / FRAME_RATE)
         {
-            mInput->Update();
+            EarlyUpdate();
+            Update();
+            LateUpdate();
 
-            mTex->Rotate(200 * mTimer->DeltaTime());
-            mTex2->Rotate(-200 * mTimer->DeltaTime());
-
-            mGraphics->ClearBackBuffer();
-            mTex->Render();
-            mTex2->Render();
-            mGraphics->Render();
-
-            mTimer->Reset();
+            Render();
         }
     }
 }

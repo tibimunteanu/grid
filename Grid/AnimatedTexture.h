@@ -9,9 +9,8 @@ public:
     enum WRAP_MODE { once = 0, loop = 1 };
     enum ANIM_DIR { horizontal = 0, vertical = 1 };
 
-private:
-    Timer* mTimer;
 
+private:
     int mStartX;
     int mStartY;
 
@@ -30,6 +29,7 @@ public:
     AnimatedTexture(std::string filename, int x, int y, int w, int h, 
                     int frameCount, float animationSpeed, ANIM_DIR animationDirection);
     ~AnimatedTexture();
+
 
     void WrapMode(WRAP_MODE mode);
 

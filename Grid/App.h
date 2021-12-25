@@ -1,18 +1,27 @@
 #pragma once
 
 #include "Timer.h"
-#include "Texture.h"
 #include "Input.h"
 #include "Audio.h"
 
 class App
 {
-private:
-    static App* sInstance;
-
+public:
     const int FRAME_RATE = 60;
 
+
+private:
+    static App* sInstance;
+    static bool sInitialized;
+
+public:
+    static App* Instance();
+    static void Release();
+
+
+private:
     bool mQuit;
+
     Graphics* mGraphics;
     Assets* mAssets;
     Input* mInput;
@@ -21,15 +30,16 @@ private:
 
     SDL_Event mEvents;
 
-    Texture* mTex;
-    Texture* mTex2;
-public:
-    static App* Instance();
-    static void Release();
-
-    void Run();
-
 private:
     App();
     ~App();
+
+    void EarlyUpdate();
+    void Update();
+    void LateUpdate();
+
+    void Render();
+
+public:
+    void Run();
 };

@@ -1,12 +1,10 @@
 #include "Entity.h"
 
-Entity::Entity(float x, float y)
+// public API
+Entity::Entity(Vector2 pos)
 {
-    mPos.x = x;
-    mPos.y = y;
-
+    mPos = pos;
     mRotation = 0.0f;
-
     mScale = VEC2_ONE;
 
     mParent = NULL;
@@ -34,9 +32,11 @@ Vector2 Entity::Pos(SPACE space)
 
     Vector2 parentPos = mParent->Pos(world);
     Vector2 parentScale = mParent->Scale(world);
-    Vector2 rotPos = RotateVector(mPos, mParent->Rotation(local));
 
-    return parentPos + rotPos * parentScale;
+    Vector2 rotPos = mPos * parentScale;
+    rotPos = RotateVector(rotPos, mParent->Rotation(local));
+
+    return parentPos + rotPos;
 }
 
 
@@ -46,11 +46,13 @@ void Entity::Rotation(float r)
 
     if (mRotation > 360.0f)
     {
-        mRotation -= 360.0f;
+        int mul = mRotation / 360.0f;
+        mRotation -= 360.0f * mul;
     }
     if (mRotation < 0)
     {
-        mRotation += 360.0f;
+        int mul = (mRotation / 360.0f) - 1;
+        mRotation -= 360.0f * mul;
     }
 }
 
@@ -96,7 +98,31 @@ bool Entity::Active()
 
 void Entity::Parent(Entity* parent)
 {
-    mPos = Pos(world) - parent->Pos(world);
+    if (parent == NULL)
+    {
+        mPos = Pos(world);
+        mRotation = Rotation(world);
+        mScale = Scale(world);
+    }
+    else
+    {
+        if (mParent != NULL)
+        {
+            Parent(NULL);
+        }
+
+        Vector2 parentPos = parent->Pos(world);
+        Vector2 parentScale = parent->Scale(world);
+        float parentRot = parent->Rotation(world);
+
+        mPos = Pos(world) - parentPos;
+        mPos = RotateVector(mPos, -parentRot);
+        mPos /= parentScale;
+
+        mRotation -= parentRot;
+
+        mScale /= parentScale;
+    }
 
     mParent = parent;
 }

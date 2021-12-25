@@ -1,27 +1,38 @@
 #include "Assets.h"
 
+// static
 Assets* Assets::sInstance = NULL;
-
+bool Assets::sInitialized = false;
 
 Assets* Assets::Instance()
 {
     if (sInstance == NULL)
     {
         sInstance = new Assets();
+        if (!sInitialized)
+        {
+            Release();
+        }
     }
     return sInstance;
 }
 
-
 void Assets::Release()
 {
-    delete sInstance;
-    sInstance = NULL;
+    if (sInstance)
+    {
+        delete sInstance;
+        sInstance = NULL;
+    }
+
+    sInitialized = false;
 }
 
 
+// private
 Assets::Assets()
 {
+    sInitialized = true;
 }
 
 Assets::~Assets()
@@ -33,7 +44,6 @@ Assets::~Assets()
             SDL_DestroyTexture(tex.second);
         }
     }
-
     mTextures.clear();
 
     for (auto text : mText)
@@ -43,7 +53,6 @@ Assets::~Assets()
             SDL_DestroyTexture(text.second);
         }
     }
-
     mText.clear();
 
     for (auto font : mFonts)
@@ -53,23 +62,27 @@ Assets::~Assets()
             TTF_CloseFont(font.second);
         }
     }
-
     mFonts.clear();
-}
 
-
-SDL_Texture* Assets::GetTexture(const std::string& filename)
-{
-    std::string fullPath = SDL_GetBasePath();
-    fullPath.append("Assets/" + filename);
-
-    if (mTextures[fullPath] == nullptr)
+    for (auto music : mMusic)
     {
-        mTextures[fullPath] = Graphics::Instance()->LoadTexture(fullPath);
+        if (music.second != NULL)
+        {
+            Mix_FreeMusic(music.second);
+        }
     }
+    mMusic.clear();
 
-    return mTextures[fullPath];
+    for (auto sfx : mSfx)
+    {
+        if (sfx.second != NULL)
+        {
+            Mix_FreeChunk(sfx.second);
+        }
+    }
+    mSfx.clear();
 }
+
 
 TTF_Font* Assets::GetFont(const std::string& filename, int size)
 {
@@ -90,6 +103,21 @@ TTF_Font* Assets::GetFont(const std::string& filename, int size)
     return mFonts[key];
 }
 
+
+// public API
+SDL_Texture* Assets::GetTexture(const std::string& filename)
+{
+    std::string fullPath = SDL_GetBasePath();
+    fullPath.append("Assets/" + filename);
+
+    if (mTextures[fullPath] == nullptr)
+    {
+        mTextures[fullPath] = Graphics::Instance()->LoadTexture(fullPath);
+    }
+
+    return mTextures[fullPath];
+}
+
 SDL_Texture* Assets::GetText(const std::string& text, const std::string& filename, int size, SDL_Color color)
 {
     std::string key = text + filename + (char)size + (char)color.r + (char)color.g + (char)color.b;
@@ -103,6 +131,7 @@ SDL_Texture* Assets::GetText(const std::string& text, const std::string& filenam
 
     return mText[key];
 }
+
 
 Mix_Music* Assets::GetMusic(const std::string& filename)
 {

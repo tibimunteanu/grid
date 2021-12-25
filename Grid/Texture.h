@@ -8,8 +8,6 @@ class Texture : public Entity
 protected:
     SDL_Texture* mTex;
 
-    Graphics* mGraphics;
-
     int mWidth;
     int mHeight;
 

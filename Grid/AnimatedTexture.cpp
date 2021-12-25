@@ -1,11 +1,10 @@
 #include "AnimatedTexture.h"
 
+// public API
 AnimatedTexture::AnimatedTexture(std::string filename, int x, int y, int w, int h,
                                  int frameCount, float animationSpeed, ANIM_DIR animationDirection)
     : Texture(filename, x, y, w, h)
 {
-    mTimer = Timer::Instance();
-
     mStartX = x;
     mStartY = y;
 
@@ -35,7 +34,7 @@ void AnimatedTexture::Update()
 {
     if (!mAnimationDone)
     {
-        mAnimationTimer += mTimer->DeltaTime();
+        mAnimationTimer += Timer::Instance()->DeltaTime();
 
         if (mAnimationTimer >= mAnimationSpeed)
         {

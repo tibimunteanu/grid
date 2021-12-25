@@ -6,25 +6,30 @@ class Timer
 {
 private:
     static Timer* sInstance;
-
-    unsigned int mStartTicks;
-    unsigned int mElapsedTicks;
-    float mDeltaTime;
-    float mTimeScale;
+    static bool sInitialized;
 
 public:
     static Timer* Instance();
     static void Release();
 
-    void Reset();
-    float DeltaTime();
 
-    void TimeScale(float t);
-    float TimeScale();
-
-    void Update();
+private:
+    unsigned int mStartTicks;
+    unsigned int mElapsedTicks;
+    float mDeltaTime;
+    float mTimeScale;
 
 private:
     Timer();
     ~Timer();
+
+public:
+    void Reset();
+
+    float DeltaTime();
+
+    void TimeScale(float t = 1.0f);
+    float TimeScale();
+
+    void Update();
 };
