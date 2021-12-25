@@ -35,6 +35,8 @@ App::App()
 
     mInput = Input::Instance();
 
+    mAudio = Audio::Instance();
+
     mTimer = Timer::Instance();
 
     mTex = new Texture("Hello World!", "UbuntuMono-Regular.ttf", 72, { 255, 0, 0 });
@@ -51,6 +53,9 @@ App::~App()
 
     Input::Release();
     mInput = NULL;
+
+    Audio::Release();
+    mAudio = NULL;
 
     Timer::Release();
     mTimer = NULL;
@@ -77,7 +82,6 @@ void App::Run()
         if (mTimer->DeltaTime() >= 1.0f / FRAME_RATE)
         {
             mInput->Update();
-            mTex->Update();
 
             mGraphics->ClearBackBuffer();
             mTex->Render();

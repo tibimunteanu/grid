@@ -103,3 +103,39 @@ SDL_Texture* Assets::GetText(const std::string& text, const std::string& filenam
 
     return mText[key];
 }
+
+Mix_Music* Assets::GetMusic(const std::string& filename)
+{
+    std::string fullPath = SDL_GetBasePath();
+    fullPath.append("Assets/" + filename);
+
+    if (mMusic[fullPath] == nullptr)
+    {
+        mMusic[fullPath] = Mix_LoadMUS(fullPath.c_str());
+        if (mMusic[fullPath] == nullptr)
+        {
+            printf("Music Loading Error: File-%s Error-%s", filename.c_str(), Mix_GetError());
+            return nullptr;
+        }
+    }
+
+    return mMusic[fullPath];
+}
+
+Mix_Chunk* Assets::GetSfx(const std::string& filename)
+{
+    std::string fullPath = SDL_GetBasePath();
+    fullPath.append("Assets/" + filename);
+
+    if (mSfx[fullPath] == nullptr)
+    {
+        mSfx[fullPath] = Mix_LoadWAV(fullPath.c_str());
+        if (mSfx[fullPath] == nullptr)
+        {
+            printf("Sfx Loading Error: File-%s Error-%s", filename.c_str(), Mix_GetError());
+            return nullptr;
+        }
+    }
+
+    return mSfx[fullPath];
+}

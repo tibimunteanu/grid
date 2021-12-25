@@ -1,7 +1,9 @@
 #pragma once
 
-#include "AnimatedTexture.h"
+#include "Timer.h"
+#include "Texture.h"
 #include "Input.h"
+#include "Audio.h"
 
 class App
 {
@@ -14,6 +16,7 @@ private:
     Graphics* mGraphics;
     Assets* mAssets;
     Input* mInput;
+    Audio* mAudio;
     Timer* mTimer;
 
     SDL_Event mEvents;
